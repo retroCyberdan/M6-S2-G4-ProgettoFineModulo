@@ -926,7 +926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44c346a25f14a2b4ca30836a796ff885, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuMusic: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: f2c33622187ec4676b363720f8b84f46, type: 3}
   gameMusic: {fileID: 8300000, guid: f2c33622187ec4676b363720f8b84f46, type: 3}
   musicVolume: 0.5
   footstepSound: {fileID: 0}

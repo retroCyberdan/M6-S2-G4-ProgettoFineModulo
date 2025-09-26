@@ -13,7 +13,7 @@ public class UnlockDoor : MonoBehaviour
     {
         void OnTriggerEnter(Collider collider)
         {
-            if (collider.CompareTag("Player") && _cardsCollector._cards == _requiredCards)
+            if (collider.CompareTag("Player") && _cardsCollector.cards == _requiredCards)
             {
                 Destroy(_doorObject);
                 this.enabled = false;

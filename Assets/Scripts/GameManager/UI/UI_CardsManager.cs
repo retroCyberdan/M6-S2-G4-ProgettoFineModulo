@@ -7,17 +7,23 @@ public class UI_CardsManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text _cardsCounter;
     public static UI_CardsManager cardsManager;
-    public int _cards;
+    public int cards;
 
     private void Awake()
     {
         if (!cardsManager) cardsManager = this;
     }
 
-    private void OnGUI() => _cardsCounter.text = _cards.ToString();
+    private void Start()
+    {
+        ShowCardsOnUI();
+    }
+
+    private void ShowCardsOnUI() => _cardsCounter.text = cards.ToString();
 
     public void AddCards(int amount)
     {
-        _cards += amount;
+        cards += amount;
+        ShowCardsOnUI();
     }
 }
