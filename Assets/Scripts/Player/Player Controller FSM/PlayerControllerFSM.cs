@@ -3,39 +3,43 @@ using UnityEngine.AI;
 
 public class PlayerControllerFSM : MonoBehaviour
 {
-    private enum MOVEMENT_TYPE { NORMAL_MOVE, TANK_MOVE }
-
     [Header("Movement Settings")]
-    [SerializeField] private MOVEMENT_TYPE _movementType = MOVEMENT_TYPE.NORMAL_MOVE;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _sprintMultiplier = 2f;
-    [SerializeField] private float _rotationSpeed = 10f;
     [SerializeField] private GroundChecker _groundChecker;
 
     [Header("Jump Settings")]
     [SerializeField] private float _jumpForce = 5f;
-    private int _maxJumps = 2;
-    private int _jumpCount = 0;
+    private bool _hasJumped = false;
 
     [Header("Audio Settings")]
     [SerializeField] private float _footstepInterval = 0.5f;
     private float _lastFootstepTime;
 
-    // inputs
+    #region Inputs
+    
     private float _h;
     private float _v;
     private bool _j;
     private float _currentSpeed;
 
-    // components
+    #endregion
+
+    #region Components
+
     private Rigidbody _rigidbody;
     private StateMachine _stateMachine;
 
-    // properties per gli stati
+    #endregion
+
+    #region Properties
+
     public GroundChecker GroundChecker => _groundChecker;
     public bool JumpInput => _j;
     public float HorizontalInput => _h;
     public float VerticalInput => _v;
+
+    #endregion
 
     private void Start()
     {
@@ -54,7 +58,6 @@ public class PlayerControllerFSM : MonoBehaviour
         _stateMachine.AddState(PlayerStateType.IDLE, new IdleState(this));
         _stateMachine.AddState(PlayerStateType.MOVING, new MovingState(this));
         _stateMachine.AddState(PlayerStateType.JUMPING, new JumpingState(this));
-        _stateMachine.AddState(PlayerStateType.IN_AIR, new InAirState(this));
 
         _stateMachine.Initialize(PlayerStateType.IDLE); // <- inizializza con stato IDLE
     }
@@ -62,6 +65,9 @@ public class PlayerControllerFSM : MonoBehaviour
     private void Update()
     {
         HandleInput();
+
+        HandleJumpReset(); // <- gestisce il reset del salto
+
         _stateMachine.UpdateStateMachine();
     }
 
@@ -75,7 +81,13 @@ public class PlayerControllerFSM : MonoBehaviour
         _h = Input.GetAxis("Horizontal");
         _v = Input.GetAxis("Vertical");
         _j = Input.GetButtonDown("Jump");
+
         UpdateSpeed();
+    }
+
+    private void HandleJumpReset()
+    {
+        if (_groundChecker.IsGrounded) _hasJumped = false; // <- se è a terra, resetta il flag del salto
     }
 
     private void UpdateSpeed()
@@ -83,7 +95,7 @@ public class PlayerControllerFSM : MonoBehaviour
         _currentSpeed = Input.GetButton("Fire3") ? _speed * _sprintMultiplier : _speed;
     }
 
-    #region Public Methods per gli Stati
+    #region Public Methods for States
     public bool HasMovementInput()
     {
         return Mathf.Abs(_h) > 0.1f || Mathf.Abs(_v) > 0.1f;
@@ -91,37 +103,23 @@ public class PlayerControllerFSM : MonoBehaviour
 
     public bool CanJump()
     {
-        return _jumpCount < _maxJumps - 1;
-    }
-
-    public void ResetJumpCount()
-    {
-        _jumpCount = 0;
+        return _groundChecker.IsGrounded && !_hasJumped; // <- può saltare solo se è a terra e non ha già saltato
     }
 
     public void PerformJump()
     {
         _rigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
-        _jumpCount++;
+        _hasJumped = true;
 
         if (AudioManager.Instance != null) AudioManager.Instance.PlayJump(transform.position);
+
+        Debug.Log("JUMP PERFORMED!");
     }
 
     public void HandleMovement()
     {
-        bool isMoving = false;
+        bool isMoving = TankMove();
 
-        switch (_movementType)
-        {
-            case MOVEMENT_TYPE.NORMAL_MOVE:
-                isMoving = NormalMove();
-                break;
-            case MOVEMENT_TYPE.TANK_MOVE:
-                isMoving = TankMove();
-                break;
-        }
-
-        // riproduce il suono dei passi se il player si sta muovendo e è a terra
         if (isMoving && _groundChecker.IsGrounded && Time.time - _lastFootstepTime > _footstepInterval)
         {
             PlayFootstepSound();
@@ -135,40 +133,25 @@ public class PlayerControllerFSM : MonoBehaviour
     }
     #endregion
 
-    #region Movement Methods
-    private bool NormalMove()
-    {
-        if (_h != 0f || _v != 0f)
-        {
-            Vector3 direction = new Vector3(_h, 0, _v);
-
-            if (direction.sqrMagnitude > 0.05f)
-            {
-                direction.Normalize();
-
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                Quaternion smoothRotation = Quaternion.Slerp(_rigidbody.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
-                _rigidbody.MoveRotation(smoothRotation);
-
-                _rigidbody.MovePosition(_rigidbody.position + direction * (_currentSpeed * Time.deltaTime));
-
-                return true; // <- indica che il player si sta muovendo
-            }
-        }
-        return false;
-    }
-
+    #region Movement Method
     private bool TankMove()
     {
         if (_h != 0 || _v != 0)
         {
-            float move = _v * _currentSpeed * Time.deltaTime;
-            float yaw = _h * _rotationSpeed * 10f * Time.deltaTime;
+            // calcola le direzioni del movimento basate sul transform del player
+            Vector3 forward = transform.forward * _v;  // <- su/giù = avanti/indietro
+            Vector3 right = transform.right * _h;      // <- sinistra/destra = laterale
 
-            _rigidbody.MovePosition(_rigidbody.position + transform.forward * move);
-            _rigidbody.MoveRotation(_rigidbody.rotation * Quaternion.Euler(0f, yaw, 0f));
+            Vector3 moveDirection = forward + right; // <- combina i movimenti
 
-            return true; // <- indica che il player si sta muovendo
+            if (moveDirection.sqrMagnitude > 0.05f)
+            {
+                moveDirection.Normalize();
+
+                _rigidbody.MovePosition(_rigidbody.position + moveDirection * (_currentSpeed * Time.deltaTime)); // <- muovi il player
+
+                return true;
+            }
         }
         return false;
     }

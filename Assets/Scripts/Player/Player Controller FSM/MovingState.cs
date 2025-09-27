@@ -8,7 +8,7 @@ public class MovingState : PlayerState
 
     public override void EnterState()
     {
-        // Debug.Log("Entering MOVING state");
+        // il reset è automatico nel PlayerControllerFSM
     }
 
     public override void FixedUpdateState()
@@ -18,28 +18,10 @@ public class MovingState : PlayerState
 
     public override PlayerStateType CheckTransitions()
     {
-        // Reset contatore salti se a terra
-        if (controller.GroundChecker.IsGrounded)
-            controller.ResetJumpCount();
+        if (controller.JumpInput && controller.CanJump()) return PlayerStateType.JUMPING; // <- priorità al salto
 
-        // Priorità al salto
-        if (controller.JumpInput && controller.CanJump())
-        {
-            return PlayerStateType.JUMPING;
-        }
+        if (!controller.HasMovementInput()) return PlayerStateType.IDLE; // <- se non c'è input di movimento, vai in idle
 
-        // Se non è a terra, è in aria
-        if (!controller.GroundChecker.IsGrounded)
-        {
-            return PlayerStateType.IN_AIR;
-        }
-
-        // Se non c'è più movimento, torna idle
-        if (!controller.HasMovementInput())
-        {
-            return PlayerStateType.IDLE;
-        }
-
-        return PlayerStateType.MOVING;
+        return PlayerStateType.MOVING; // <- continua a muoversi
     }
 }

@@ -6,21 +6,36 @@ public class JumpingState : PlayerState
 {
     public JumpingState(PlayerControllerFSM controller) : base(controller, PlayerStateType.JUMPING) { }
 
+    private bool _hasExecutedJump = false;
+
     public override void EnterState()
     {
-        // Debug.Log("Entering JUMPING state");
-        controller.PerformJump();
+        if (!_hasExecutedJump)
+        {
+            controller.PerformJump();
+            _hasExecutedJump = true;
+        }
+    }
+
+    public override void ExitState()
+    {
+        _hasExecutedJump = false; // <- reset quando esce dallo stato
     }
 
     public override void FixedUpdateState()
     {
-        // Permetti movimento anche durante il salto
-        controller.HandleMovement();
+        controller.HandleMovement(); // <- permetti movimento anche mentre salta
     }
 
     public override PlayerStateType CheckTransitions()
     {
-        // Dopo il frame di salto, vai in aria
-        return PlayerStateType.IN_AIR;
+        if (controller.GroundChecker.IsGrounded)
+        {
+            if (controller.HasMovementInput()) return PlayerStateType.MOVING;
+
+            else return PlayerStateType.IDLE;
+        }
+
+        return PlayerStateType.JUMPING; // <- se non è a terra, rimane in jumping (gestisce la caduta)
     }
 }

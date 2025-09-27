@@ -8,43 +8,20 @@ public class IdleState : PlayerState
 
     public override void EnterState()
     {
-        // Debug.Log("Entering IDLE state");
-    }
-
-    public override void UpdateState()
-    {
-        // Logica per lo stato idle se necessaria
+        // il reset è automatico nel PlayerControllerFSM
     }
 
     public override void FixedUpdateState()
     {
-        // Non fare nulla quando fermo
+        // niente movimento in idle
     }
 
     public override PlayerStateType CheckTransitions()
     {
-        // Reset contatore salti se a terra
-        if (controller.GroundChecker.IsGrounded)
-            controller.ResetJumpCount();
+        if (controller.JumpInput && controller.CanJump()) return PlayerStateType.JUMPING; // <- priorità al salto
 
-        // Priorità al salto
-        if (controller.JumpInput && controller.CanJump())
-        {
-            return PlayerStateType.JUMPING;
-        }
+        if (controller.HasMovementInput()) return PlayerStateType.MOVING; // <- poi al movimento
 
-        // Se non è a terra, è in aria
-        if (!controller.GroundChecker.IsGrounded)
-        {
-            return PlayerStateType.IN_AIR;
-        }
-
-        // Se c'è movimento, passa a moving
-        if (controller.HasMovementInput())
-        {
-            return PlayerStateType.MOVING;
-        }
-
-        return PlayerStateType.IDLE;
+        return PlayerStateType.IDLE; // <- rimane in idle
     }
 }

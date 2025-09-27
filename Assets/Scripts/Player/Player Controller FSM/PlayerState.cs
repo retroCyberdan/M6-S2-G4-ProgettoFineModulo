@@ -7,7 +7,6 @@ public enum PlayerStateType
     IDLE,
     MOVING,
     JUMPING,
-    IN_AIR
 }
 
 public abstract class PlayerState

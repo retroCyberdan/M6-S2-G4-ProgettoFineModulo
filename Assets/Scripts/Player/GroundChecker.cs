@@ -32,10 +32,10 @@ public class GroundChecker : MonoBehaviour
         switch(_groundCheckType)
         {
             case GROUND_CHECK_TYPE.RAYCAST :
-                IsGrounded = Physics.Raycast(transform.position, -Vector3.up, _maxDistance);
+                IsGrounded = Physics.Raycast(transform.position, -Vector3.up, _maxDistance, _whatIsGround);
                 break;
             case GROUND_CHECK_TYPE.CHECK_SPHERE :
-                IsGrounded = Physics.CheckSphere(transform.position, _maxDistance);
+                IsGrounded = Physics.CheckSphere(transform.position, _maxDistance, _whatIsGround);
                 break;
         }
     }
