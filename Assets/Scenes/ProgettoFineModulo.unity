@@ -16493,6 +16493,7 @@ GameObject:
   - component: {fileID: 3647687562146440383}
   - component: {fileID: 3674111682819839931}
   - component: {fileID: 4456995406313382608}
+  - component: {fileID: 8250709850886484347}
   - component: {fileID: 7883629793349305955}
   - component: {fileID: 8250709850886484346}
   m_Layer: 0
@@ -16715,6 +16716,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fillableLifeBar: {fileID: 343836090}
   _lifeText: {fileID: 1692320459}
+--- !u!114 &8250709850886484347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128482742724423778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64b916527e81ff45a39347595742158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  fogDensity: 0.04
+  fogMode: 2
+  linearStart: 5
+  linearEnd: 20
+  useParticleFog: 1
+  particleMaterial: {fileID: 2100000, guid: 2d61771811e1284419ef303651ef400f, type: 2}
+  fogAreaSize: {x: 50, y: 10, z: 50}
+  particleDensity: 200
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
