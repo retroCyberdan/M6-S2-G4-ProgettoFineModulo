@@ -209,7 +209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 37723548}
   m_Layer: 6
-  m_Name: ENVIRORMENT
+  m_Name: Enviroment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -438,7 +438,7 @@ GameObject:
   - component: {fileID: 75948038}
   - component: {fileID: 75948041}
   m_Layer: 0
-  m_Name: Virtual Camera
+  m_Name: Third Person Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1354,7 +1354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 193486613}
   m_Layer: 0
-  m_Name: OBSTACLES
+  m_Name: Obstacles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1904,10 +1904,10 @@ RectTransform:
   - {fileID: 1415273082}
   m_Father: {fileID: 760524676}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 56.924, y: 35.300003}
-  m_SizeDelta: {x: 86.1512, y: 19.0324}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -300.29, y: 35}
+  m_SizeDelta: {x: 86.151184, y: 19.0324}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &278260682
 MonoBehaviour:
@@ -3163,10 +3163,10 @@ RectTransform:
   - {fileID: 127395863}
   m_Father: {fileID: 760524676}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -56.924, y: 35.300003}
-  m_SizeDelta: {x: 86.1512, y: 19.0324}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 300, y: 35}
+  m_SizeDelta: {x: 86.151184, y: 19.0324}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &472302797
 MonoBehaviour:
@@ -9075,7 +9075,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1080230870}
   m_Layer: 0
-  m_Name: TURRETS
+  m_Name: Turrets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9716,7 +9716,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 35.300003}
+  m_AnchoredPosition: {x: 0, y: 35}
   m_SizeDelta: {x: 86.1512, y: 19.0324}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1153112732
@@ -13800,7 +13800,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1738821632}
   m_Layer: 0
-  m_Name: OBJECTS
+  m_Name: Objects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

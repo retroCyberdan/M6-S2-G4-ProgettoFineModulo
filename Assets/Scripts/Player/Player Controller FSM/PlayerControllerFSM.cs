@@ -14,10 +14,11 @@ public class PlayerControllerFSM : MonoBehaviour
 
     [Header("Audio Settings")]
     [SerializeField] private float _footstepInterval = 0.5f;
+    [SerializeField] private float _sprintFootstepMultiplier = 1.8f; // <- moltiplicatore per la velocità dei passi durante la corsa
     private float _lastFootstepTime;
 
     #region Inputs
-    
+
     private float _h;
     private float _v;
     private bool _j;
@@ -120,11 +121,24 @@ public class PlayerControllerFSM : MonoBehaviour
     {
         bool isMoving = TankMove();
 
-        if (isMoving && _groundChecker.IsGrounded && Time.time - _lastFootstepTime > _footstepInterval)
+        if (isMoving && _groundChecker.IsGrounded)
         {
-            PlayFootstepSound();
-            _lastFootstepTime = Time.time;
+            // calcola l'intervallo dei passi in base alla velocità
+            float currentFootstepInterval = GetCurrentFootstepInterval();
+
+            if (Time.time - _lastFootstepTime > currentFootstepInterval)
+            {
+                PlayFootstepSound();
+                _lastFootstepTime = Time.time;
+            }
         }
+    }
+
+    private float GetCurrentFootstepInterval()
+    {
+        // se sta correndo (Fire3 premuto), riduci l'intervallo dei passi
+        bool isSprinting = Input.GetButton("Fire3");
+        return isSprinting ? _footstepInterval / _sprintFootstepMultiplier : _footstepInterval;
     }
 
     private void PlayFootstepSound()
